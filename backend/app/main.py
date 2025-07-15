@@ -32,7 +32,9 @@ allowed_origins = [
     "http://127.0.0.1:3000",
     "https://*.netlify.app",  # Allow all Netlify domains
     "https://netlify.app",    # Allow Netlify main domain
-    "https://your-frontend-domain.com",  # Replace with your actual frontend domain
+    "https://*.railway.app",  # Allow Railway domains
+    "https://railway.app",    # Allow Railway main domain
+    "https://jovial-taffy-7e3551.netlify.app",  # رابط Netlify الفعلي
 ]
 
 app.add_middleware(

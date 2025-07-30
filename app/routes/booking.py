@@ -52,7 +52,7 @@ def book_slot(
     db_booking = create_booking(db, int(current_user.id), booking)
     return BookingOut(
         id=db_booking.id,
-        user=UserOut.model_validate(db_booking.user),
+        user=UserOut.parse_obj(db_booking.user),
         date=db_booking.date,
         start_time=db_booking.start_time.strftime('%I:%M %p'),
         end_time=db_booking.end_time.strftime('%I:%M %p'),
@@ -69,7 +69,7 @@ def get_my_bookings(
     return [
         BookingOut(
             id=b.id,
-            user=UserOut.model_validate(b.user),
+            user=UserOut.parse_obj(b.user),
             date=b.date,
             start_time=b.start_time.strftime('%I:%M %p'),
             end_time=b.end_time.strftime('%I:%M %p'),
@@ -98,7 +98,7 @@ def get_bookings_by_status_endpoint(
     return [
         BookingOut(
             id=b.id,
-            user=UserOut.model_validate(b.user),
+            user=UserOut.parse_obj(b.user),
             date=b.date,
             start_time=b.start_time.strftime('%I:%M %p'),
             end_time=b.end_time.strftime('%I:%M %p'),

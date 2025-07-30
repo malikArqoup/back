@@ -14,7 +14,7 @@ def get_slider_images_public_endpoint(db: Session = Depends(get_db)):
     Endpoint عام لجلب صور السلايدر (بدون تحقق أدمن)
     """
     sliders = get_slider_images(db)
-    return [SliderImageOut.model_validate(s) for s in sliders]
+    return [SliderImageOut.parse_obj(s) for s in sliders]
 
 @router.get("/admin/slider-images", response_model=List[SliderImageOut])
 def get_slider_images_admin_endpoint(db: Session = Depends(get_db)):
@@ -22,4 +22,4 @@ def get_slider_images_admin_endpoint(db: Session = Depends(get_db)):
     Endpoint لإدارة السلايدر (admin) لجلب صور السلايدر
     """
     sliders = get_slider_images(db)
-    return [SliderImageOut.model_validate(s) for s in sliders] 
+    return [SliderImageOut.parse_obj(s) for s in sliders] 

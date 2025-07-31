@@ -11,9 +11,9 @@ def read_clinic_info(db: Session = Depends(get_db)):
     info = get_clinic_info(db)
     if not info:
         raise HTTPException(status_code=404, detail="Clinic info not set")
-    return ClinicInfoOut.parse_obj(info)
+    return ClinicInfoOut.from_orm(info)
 
 @router.post("/", response_model=ClinicInfoOut)
 def save_clinic_info(data: ClinicInfoIn, db: Session = Depends(get_db)):
     info = update_clinic_info(db, data)
-    return ClinicInfoOut.parse_obj(info) 
+    return ClinicInfoOut.from_orm(info) 

@@ -64,7 +64,7 @@ def get_all_bookings(
     for b in bookings:
         result.append({
             "id": b.id,
-            "user": UserOut.parse_obj(b.user),
+            "user": UserOut.from_orm(b.user),
             "date": b.date,
             "start_time": b.start_time.strftime('%I:%M %p'),
             "end_time": b.end_time.strftime('%I:%M %p'),
@@ -90,7 +90,7 @@ def search_bookings(
     for b in bookings:
         result.append({
             "id": b.id,
-            "user": UserOut.parse_obj(b.user),
+            "user": UserOut.from_orm(b.user),
             "date": b.date,
             "start_time": b.start_time.strftime('%I:%M %p'),
             "end_time": b.end_time.strftime('%I:%M %p'),
@@ -102,14 +102,14 @@ def search_bookings(
 @router.get("/users", response_model=List[UserOut])
 def get_all_users(db: Session = Depends(get_db), current_user: User = Depends(verify_admin)):
     users = db.query(User).all()
-    return [UserOut.parse_obj(u) for u in users]
+    return [UserOut.from_orm(u) for u in users]
 
 @router.get("/users/search", response_model=List[UserOut])
 def search_users(q: str, db: Session = Depends(get_db), current_user: User = Depends(verify_admin)):
     users = db.query(User).filter(
         (User.name.ilike(f"%{q}%")) | (User.email.ilike(f"%{q}%"))
     ).all()
-    return [UserOut.parse_obj(u) for u in users]
+    return [UserOut.from_orm(u) for u in users]
 
 @router.post("/booking-settings", response_model=BookingSettings)
 def save_booking_settings_endpoint(
@@ -163,7 +163,7 @@ def update_booking_endpoint(
     
     return {
         "id": booking.id,
-        "user": UserOut.parse_obj(booking.user),
+        "user": UserOut.from_orm(booking.user),
         "date": booking.date,
         "start_time": booking.start_time.strftime('%I:%M %p'),
         "end_time": booking.end_time.strftime('%I:%M %p'),
@@ -187,12 +187,12 @@ def delete_booking_endpoint(
 @router.get("/slider", response_model=list[SliderImageOut])
 def get_slider_images(db: Session = Depends(get_db)):
     sliders = db.query(SliderImage).all()
-    return [SliderImageOut.parse_obj(s) for s in sliders]
+    return [SliderImageOut.from_orm(s) for s in sliders]
 
 @router.get("/slider-images", response_model=list[SliderImageOut])
 def get_slider_images_alt(db: Session = Depends(get_db)):
     sliders = db.query(SliderImage).all()
-    return [SliderImageOut.parse_obj(s) for s in sliders]
+    return [SliderImageOut.from_orm(s) for s in sliders]
 
 @router.post("/admin/slider", response_model=SliderImageOut)
 async def create_slider_image(
@@ -312,14 +312,14 @@ def contact_us(message: ContactMessageIn, db: Session = Depends(get_db)):
 @router.get("/contact-messages", response_model=list[ContactMessageOut])
 def get_contact_messages(db: Session = Depends(get_db), current_user: User = Depends(verify_admin)):
     messages = db.query(ContactMessageModel).order_by(ContactMessageModel.created_at.desc()).all()
-    return [ContactMessageOut.parse_obj(m) for m in messages]
+    return [ContactMessageOut.from_orm(m) for m in messages]
 
 @router.put("/users/{user_id}", response_model=UserOut)
 def update_user_endpoint(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(verify_admin)):
     user = crud_update_user(db, user_id, user_update.dict(exclude_unset=True))
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return UserOut.parse_obj(user)
+    return UserOut.from_orm(user)
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(verify_admin)):
